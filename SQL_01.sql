@@ -211,3 +211,96 @@ JOIN store_costumer_contact scc
 ON sci.client_id=scc.client_id 
 JOIN store_costumer_sales scs 
 ON scs.client_id=sci.client_id 
+
+# Store_costumer_ids (field 'client' for client name)
+# Store_costumer_contact (field 'email')
+# Store_costumer_sales (field 'product_1' for products)
+
+SELECT 
+sci.client, 
+scc.email, 
+SUM(price) total_gasto 
+FROM store_costumer_ids sci 
+JOIN store_costumer_contact scc 
+ON sci.client_id=scc.client_id 
+JOIN store_costumer_sales scs 
+ON scs.client_id=sci.client_id 
+GROUP BY sci.client, scc.email 
+
+# Joins & Unions 
+# Usando as tabelas employees (há 4 tabelas). Observe o esquema das tabelas, descubra que tipo de dados está 
+# em cada tabela e responda às seguintes perguntas 
+# 1 - Crie uma tabela (view) com o name, state, salary and bonus de cada funcionário. Retorne todos os funcionários 
+# (mesmo em branco) da tabela que contém name e state, mas apenas os registros correspondentes da tabela à direita
+# (tabela 2) contendo salário e bônus 
+
+SELECT 
+ep.employee_name,
+ep.state, 
+es.salary, 
+es.bonus 
+FROM employees ep 
+LEFT JOIN employees_salary es 
+ON ep.employee_id=es.employee_id 
+
+# Joins & Unions 
+# Usando as tabelas employees (há 4 tabelas). Observe o esquema das tabelas, descubra que tipo de dados está 
+# em cada tabela e responda às seguintes perguntas 
+# Retornar os mesmo valores do exercicio 1, mas apenas para funcionarios de TX, FL e CA 
+
+SELECT 
+ep.employee_name, 
+ep.state, 
+es.salary, 
+es.bonus 
+FROM employees ep 
+LEFT JOIN employees_salary es 
+ON ep.employee_id=es.employee_id 
+WHERE state IN ('CA', 'TX', "FL")
+
+# Joins & Unions 
+# Usando as tabelas employees (há 4 tabelas). Observe o esquema das tabelas, descubra que tipo de dados está 
+# em cada tabela e responda às seguintes perguntas 
+# Temos que pagar a cada funcionário seus bônus. O bônus é calculado como uma porcentagem de seu salário. 
+# Por favor, me dê todos os IDs de funcionários, nomes e valor de seus bônus em dólares. $ 
+SELECT ep.employee_name, ep.state, (es.salary* es.bonus) AS Bonus
+FROM employees ep
+LEFT JOIN employees_salary es
+ON ep.employee_id=es.employee_id
+WHERE state IN ('CA', 'TX', 'FL')
+
+
+# Joins & Unions 
+# Usando as tabelas employees (há 4 tabelas). Observe o esquema das tabelas, descubra que tipo de dados está 
+# em cada tabela e responda às seguintes perguntas 
+# Usando a mesma query, por favor, mostre apenas aos funcionários que têm bônus acima de US # 3.000 
+SELECT ep.employee_name, ep.state, (es.salary* es.bonus) AS Bonus
+FROM employees ep
+LEFT JOIN employees_salary es
+ON ep.employee_id=es.employee_id
+WHERE state IN ('CA', 'TX', 'FL')
+HAVING (es.salary* es.bonus) > 3000
+
+
+# 
+
+SELECT 
+employeename, 
+jobtitle, 
+(CAST(basepay AS DECIMAL)+
+CAST(overtimepay AS DECIMAL)) AS total_salary 
+FROM san_francisco_salaries  
+
+
+# Usando a tabela san_francisco_salaries gere: 
+# Uma tabela com a média (AVG) de totalpay por jobtitle 
+
+SELECT 
+jobtitle,
+AVG (totalpay) average_salary #nome pra essa coluna
+FROM san_francisco_salaries 
+GROUP BY jobtitle
+ORDER BY average_salary DESC # ordenar pelo mais alto para o mais baixo 
+
+
+
